@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carmen Sandiego — Playing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body class="game-body">
+
+  <!-- ===== BRIEFING SCREEN ===== -->
+  <div id="briefing-screen" class="screen active">
+    <div class="briefing-bg">
+      <div class="briefing-container">
+        <div class="briefing-header">
+          <div class="acme-badge-sm">ACME Detective Agency</div>
+          <div class="case-title-display" id="briefing-case-title">Case 1: Roman Rubble</div>
+        </div>
+        <div class="briefing-body">
+          <div class="character-panel" id="briefing-character-panel">
+            <div class="character-portrait" id="briefing-portrait"></div>
+            <div class="character-name" id="briefing-char-name">Dr. Kenny</div>
+          </div>
+          <div class="briefing-dialogue">
+            <div class="crime-report">
+              <div class="crime-report-label">CRIME REPORT</div>
+              <div class="stolen-item" id="briefing-stolen-item"></div>
+              <div class="crime-location" id="briefing-crime-location"></div>
+            </div>
+            <div class="speech-bubble briefing-bubble" id="briefing-speech">
+              <p id="briefing-text"></p>
+            </div>
+            <button class="action-btn primary large" id="btn-begin-investigation">
+              Begin Investigation →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LOCATION SCREEN ===== -->
+  <div id="location-screen" class="screen">
+    <!-- Bottom status bar -->
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="status-label">Case</span>
+        <span class="status-value" id="status-case-name"></span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Moves</span>
+        <span class="status-value" id="status-moves">0</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Warrant</span>
+        <span class="status-value" id="status-warrant">Not Issued</span>
+      </div>
+      <div class="status-item">
+        <button class="audio-btn" id="btn-toggle-audio">♪ Music ON</button>
+      </div>
+    </div>
+
+    <div class="game-layout">
+      <!-- LEFT PANEL: City Scene -->
+      <div class="city-panel" id="city-panel">
+        <div class="city-image-container">
+          <div class="city-image" id="city-image"></div>
+          <div class="city-overlay">
+            <div class="city-name" id="city-name">Rome</div>
+            <div class="city-country" id="city-country">Italy</div>
+            <div class="city-region-badge" id="city-region-badge">Europe</div>
+          </div>
+        </div>
+        <div class="city-description" id="city-description"></div>
+
+        <!-- Field Agent Appearance -->
+        <div class="field-agent-panel hidden" id="field-agent-panel">
+          <div class="field-agent-portrait" id="field-agent-portrait"></div>
+          <div class="field-agent-dialogue">
+            <div class="field-agent-name" id="field-agent-name"></div>
+            <div class="speech-bubble small" id="field-agent-speech"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: Actions + Clues + Dossier -->
+      <div class="action-panel">
+
+        <!-- Clue Sources -->
+        <div class="clue-sources-section">
+          <h3 class="section-title">Investigate</h3>
+          <div class="clue-buttons">
+            <button class="clue-btn" id="btn-witness" data-source="witness">
+              <span class="clue-icon">👁</span>
+              <span class="clue-label">Interview Witness</span>
+              <span class="clue-status" id="clue-status-witness"></span>
+            </button>
+            <button class="clue-btn" id="btn-search" data-source="search">
+              <span class="clue-icon">🔍</span>
+              <span class="clue-label">Search the Area</span>
+              <span class="clue-status" id="clue-status-search"></span>
+            </button>
+            <button class="clue-btn" id="btn-crimenet" data-source="crimenet">
+              <span class="clue-icon">📡</span>
+              <span class="clue-label">Call Crime Net</span>
+              <span class="clue-status" id="clue-status-crimenet"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Clue Reveal Area -->
+        <div class="clue-reveal-area hidden" id="clue-reveal-area">
+          <div class="clue-source-label" id="clue-source-label"></div>
+          <div class="speech-bubble clue-bubble" id="clue-bubble-text"></div>
+        </div>
+
+        <!-- Collected Clues Log -->
+        <div class="clues-log-section">
+          <h3 class="section-title">Clues Collected</h3>
+          <div class="clues-log" id="clues-log">
+            <p class="clues-empty">No clues yet. Start investigating!</p>
+          </div>
+        </div>
+
+        <!-- Dossier -->
+        <div class="dossier-section">
+          <h3 class="section-title">Suspect Dossier
+            <button class="dossier-warrant-btn" id="btn-request-warrant" disabled>
+              Request Warrant
+            </button>
+          </h3>
+          <div class="dossier-grid">
+            <div class="dossier-row" id="dossier-gender">
+              <span class="dossier-label">Gender</span>
+              <span class="dossier-value unknown">Unknown</span>
+            </div>
+            <div class="dossier-row" id="dossier-hair">
+              <span class="dossier-label">Hair</span>
+              <span class="dossier-value unknown">Unknown</span>
+            </div>
+            <div class="dossier-row" id="dossier-eyes">
+              <span class="dossier-label">Eyes</span>
+              <span class="dossier-value unknown">Unknown</span>
+            </div>
+            <div class="dossier-row" id="dossier-feature">
+              <span class="dossier-label">Feature</span>
+              <span class="dossier-value unknown">Unknown</span>
+            </div>
+            <div class="dossier-row" id="dossier-hobby">
+              <span class="dossier-label">Hobby</span>
+              <span class="dossier-value unknown">Unknown</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation-section">
+          <button class="action-btn primary" id="btn-choose-destination" disabled>
+            Choose Next Destination →
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TRAVEL SCREEN ===== -->
+  <div id="travel-screen" class="screen">
+    <div class="travel-container">
+      <div class="travel-header">
+        <h2>Where did the suspect go?</h2>
+        <p class="travel-hint">Use your clues to choose the right destination.</p>
+      </div>
+      <div class="destination-cards" id="destination-cards">
+        <!-- Cards injected by JS -->
+      </div>
+      <div class="cold-trail-msg hidden" id="cold-trail-msg">
+        <div class="cold-trail-icon">❄</div>
+        <h3>The trail has gone cold here...</h3>
+        <p id="cold-trail-text">You lose 2 moves searching the wrong city. Keep looking!</p>
+        <button class="action-btn secondary" id="btn-cold-continue">Try Another City</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DOSSIER / WARRANT SCREEN ===== -->
+  <div id="warrant-screen" class="screen">
+    <div class="warrant-container">
+      <div class="warrant-header">
+        <button class="back-btn" id="btn-back-from-warrant">← Back</button>
+        <h2>Issue Arrest Warrant</h2>
+        <p>Match the suspect's traits to a V.I.L.E. criminal in our database.</p>
+      </div>
+      <div class="warrant-body">
+        <div class="known-traits-panel">
+          <h3>Known Traits</h3>
+          <div class="traits-summary" id="warrant-traits-summary"></div>
+        </div>
+        <div class="suspects-lineup" id="suspects-lineup">
+          <!-- Suspect cards injected by JS -->
+        </div>
+      </div>
+      <div class="warrant-actions">
+        <button class="action-btn primary" id="btn-issue-warrant" disabled>
+          Issue Warrant for Selected Suspect
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ARREST SCREEN ===== -->
+  <div id="arrest-screen" class="screen">
+    <div class="arrest-container" id="arrest-container">
+      <!-- Injected by JS: success, failure, wrong suspect -->
+    </div>
+  </div>
+
+  <!-- ===== DEBRIEF SCREEN ===== -->
+  <div id="debrief-screen" class="screen">
+    <div class="debrief-container">
+      <div class="debrief-header">
+        <div class="acme-badge-sm">ACME Detective Agency</div>
+        <h2 id="debrief-title">Case Closed!</h2>
+      </div>
+      <div class="debrief-body">
+        <div class="character-panel">
+          <div class="character-portrait" id="debrief-portrait"></div>
+          <div class="character-name" id="debrief-char-name"></div>
+        </div>
+        <div class="debrief-right">
+          <div class="speech-bubble" id="debrief-speech"></div>
+          <div class="score-panel">
+            <div class="score-row">
+              <span>Moves Used:</span>
+              <span id="score-moves"></span>
+            </div>
+            <div class="score-row">
+              <span>Speed Bonus:</span>
+              <span id="score-bonus"></span>
+            </div>
+            <div class="score-row highlight">
+              <span>Total Score:</span>
+              <span id="score-total"></span>
+            </div>
+            <div class="rank-panel">
+              <div class="rank-label">Current Rank</div>
+              <div class="rank-value" id="debrief-rank"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="debrief-actions">
+        <button class="action-btn primary" id="btn-next-case">Next Case →</button>
+        <button class="action-btn secondary" id="btn-main-menu">Main Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GAME OVER SCREEN ===== -->
+  <div id="gameover-screen" class="screen">
+    <div class="gameover-container" id="gameover-container">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- ===== WIN SCREEN ===== -->
+  <div id="win-screen" class="screen">
+    <div class="win-container">
+      <div class="win-header">
+        <div class="confetti-layer" id="confetti-layer"></div>
+        <h1 class="win-title">Carmen Sandiego — Captured!</h1>
+        <h2 class="win-subtitle">Operation: Empty the World — COMPLETE</h2>
+      </div>
+      <div class="win-body">
+        <div class="win-characters">
+          <div class="win-char kenny-win">
+            <div class="character-portrait kenny-portrait"></div>
+            <div class="speech-bubble small">The world's treasures are safe! You did it, Agent!</div>
+          </div>
+          <div class="win-char al-win">
+            <div class="character-portrait al-portrait"></div>
+            <div class="speech-bubble small">Not bad, rookie. Not bad at all.</div>
+          </div>
+        </div>
+        <div class="win-stats">
+          <h3>Final Stats</h3>
+          <div id="win-stats-content"></div>
+        </div>
+        <div class="final-rank">
+          <div class="rank-label">Final Rank Achieved</div>
+          <div class="rank-value" id="win-final-rank">Carmen's Nemesis</div>
+        </div>
+      </div>
+      <div class="win-actions">
+        <button class="action-btn primary" id="btn-credits">View Credits</button>
+        <button class="action-btn secondary" id="btn-win-main-menu">Main Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CREDITS SCREEN ===== -->
+  <div id="credits-screen" class="screen">
+    <div class="credits-container">
+      <div class="credits-scroll" id="credits-scroll">
+        <h1>Carmen Sandiego</h1>
+        <h2>Operation: Empty the World</h2>
+        <div class="credits-divider"></div>
+        <h3>Characters</h3>
+        <p>Dr. Kenny — ACME Chief Science Officer</p>
+        <p>Al — Crime Net Operator</p>
+        <p>Yu-Fu Chen — ACME Senior Field Detective</p>
+        <p>Uncle Silas — ACME Veteran Detective</p>
+        <div class="credits-divider"></div>
+        <h3>V.I.L.E. Suspects</h3>
+        <p>Nick Brunt • Sarah Nade • Ivor Idea • Nadia Slinsk</p>
+        <p>Lars Vegas • Dee Cryption • Victor Flauté • The Shadow</p>
+        <div class="credits-divider"></div>
+        <h3>Assets</h3>
+        <p>City images: Wikimedia Commons / Unsplash (CC licensed)</p>
+        <p>Music: Free Music Archive (CC licensed)</p>
+        <p>Fonts: Google Fonts — Cinzel, Lato</p>
+        <div class="credits-divider"></div>
+        <h3>Inspired by</h3>
+        <p>Where in the World is Carmen Sandiego?</p>
+        <p>Original game by Broderbund Software (1985)</p>
+        <div class="credits-divider"></div>
+        <p class="credits-thanks">Thank you for playing!</p>
+      </div>
+      <button class="action-btn secondary" id="btn-close-credits">Close</button>
+    </div>
+  </div>
+
+  <!-- Audio element -->
+  <audio id="bg-music" loop></audio>
+
+  <script src="js/audio.js"></script>
+  <script src="js/suspects.js"></script>
+  <script src="js/locations.js"></script>
+  <script src="js/cases.js"></script>
+  <script src="js/clues.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

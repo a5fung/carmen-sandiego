@@ -1,0 +1,283 @@
+/* ===================================
+   Carmen Sandiego — Global Styles
+   =================================== */
+
+:root {
+  --acme-red: #c0392b;
+  --acme-red-dark: #922b21;
+  --acme-gold: #d4ac0d;
+  --acme-gold-dark: #b7950b;
+  --acme-navy: #1a1f36;
+  --acme-navy-light: #252b48;
+  --acme-cream: #f5f0e8;
+  --acme-light: #fafaf7;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a6a;
+  --text-light: #9a9ab0;
+  --text-white: #ffffff;
+  --border-color: rgba(212, 172, 13, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.25);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --transition-fast: 0.15s ease;
+  --transition-mid: 0.3s ease;
+  --transition-slow: 0.6s ease;
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Lato', sans-serif;
+  --border-radius: 8px;
+  --border-radius-lg: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--acme-navy);
+}
+
+/* ===== Screen System ===== */
+.screen {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-mid);
+  z-index: 10;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.screen.transitioning-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== ACME Badge Components ===== */
+.acme-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  border: 3px solid var(--acme-gold);
+  padding: 10px 24px;
+  border-radius: var(--border-radius);
+  background: rgba(0,0,0,0.6);
+}
+
+.acme-text {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--acme-gold);
+  letter-spacing: 8px;
+}
+
+.acme-sub {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  color: var(--acme-cream);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.acme-badge-sm {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--acme-gold);
+  text-transform: uppercase;
+  border: 1px solid var(--acme-gold);
+  padding: 4px 12px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* ===== Speech Bubbles ===== */
+.speech-bubble {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  position: relative;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid white;
+}
+
+.speech-bubble.small {
+  font-size: 0.85rem;
+  padding: 10px 14px;
+}
+
+.speech-bubble.clue-bubble {
+  background: #fffde7;
+  border-color: var(--acme-gold);
+}
+
+.speech-bubble.clue-bubble::before {
+  border-right-color: #fffde7;
+}
+
+/* ===== Buttons ===== */
+.action-btn {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--acme-red), var(--acme-red-dark));
+  color: white;
+  box-shadow: 0 4px 15px rgba(192, 57, 43, 0.4);
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192, 57, 43, 0.5);
+}
+
+.action-btn.primary:disabled {
+  background: #aaa;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.action-btn.secondary {
+  background: transparent;
+  color: var(--acme-gold);
+  border: 2px solid var(--acme-gold);
+}
+
+.action-btn.secondary:hover {
+  background: var(--acme-gold);
+  color: var(--acme-navy);
+}
+
+.action-btn.secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action-btn.large {
+  padding: 16px 40px;
+  font-size: 1rem;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: var(--acme-gold);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+
+.back-btn:hover {
+  background: rgba(212, 172, 13, 0.1);
+}
+
+/* ===== Character Portraits ===== */
+.character-portrait {
+  width: 120px;
+  height: 140px;
+  border-radius: 8px;
+  background: var(--acme-navy-light);
+  border: 3px solid var(--acme-gold);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  position: relative;
+}
+
+.kenny-portrait::after { content: '🧪'; font-size: 3rem; }
+.al-portrait::after { content: '📡'; font-size: 3rem; }
+.yufu-portrait::after { content: '🔎'; font-size: 3rem; }
+.silas-portrait::after { content: '🎩'; font-size: 3rem; }
+
+/* ===== Section Titles ===== */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--acme-gold);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== Utility ===== */
+.hidden {
+  display: none !important;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-in {
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+::-webkit-scrollbar-thumb { background: var(--acme-gold); border-radius: 3px; }

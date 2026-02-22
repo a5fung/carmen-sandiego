@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carmen Sandiego — Operation: Empty the World</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body class="menu-body">
+
+  <!-- Title Screen -->
+  <div id="title-screen" class="screen active">
+    <div class="title-bg">
+      <div class="silhouette-container">
+        <div class="carmen-silhouette"></div>
+        <div class="city-skyline"></div>
+      </div>
+      <div class="title-overlay">
+        <div class="acme-logo">
+          <div class="acme-badge">
+            <span class="acme-text">ACME</span>
+            <span class="acme-sub">Detective Agency</span>
+          </div>
+        </div>
+        <div class="game-title">
+          <h1 class="title-main">Carmen Sandiego</h1>
+          <h2 class="title-sub">Operation: Empty the World</h2>
+        </div>
+        <div class="menu-buttons">
+          <button class="menu-btn primary" id="btn-new-game">New Game</button>
+          <button class="menu-btn secondary" id="btn-continue" disabled>Continue</button>
+          <button class="menu-btn secondary" id="btn-case-select" disabled>Case Select</button>
+        </div>
+        <div class="menu-footer">
+          <p class="rank-display" id="rank-display"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Select Screen -->
+  <div id="case-select-screen" class="screen">
+    <div class="case-select-container">
+      <div class="case-select-header">
+        <button class="back-btn" id="btn-back-from-cases">← Back</button>
+        <h2>Select Case</h2>
+      </div>
+      <div class="case-grid" id="case-grid">
+        <!-- Cases injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/audio.js"></script>
+  <script src="js/suspects.js"></script>
+  <script src="js/locations.js"></script>
+  <script src="js/cases.js"></script>
+  <script src="js/clues.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

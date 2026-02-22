@@ -1,0 +1,361 @@
+/* ===================================
+   Carmen Sandiego — Menu Screen Styles
+   =================================== */
+
+.menu-body {
+  background: var(--acme-navy);
+}
+
+/* ===== Title Screen ===== */
+.title-bg {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(180deg, #0d0d1a 0%, #1a1f36 40%, #0a0a15 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Starfield */
+.title-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 75%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 78% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 33% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,0.3) 0%, transparent 100%);
+}
+
+/* City skyline silhouette at bottom */
+.city-skyline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background:
+    /* Buildings as clip path via CSS boxes */
+    linear-gradient(to top, #0a0a15 0%, #0a0a15 100%);
+  clip-path: polygon(
+    0% 100%,
+    0% 60%,
+    2% 60%, 2% 40%, 4% 40%, 4% 55%,
+    6% 55%, 6% 30%, 8% 30%, 8% 55%,
+    10% 55%, 10% 45%, 12% 45%, 12% 55%,
+    14% 55%, 14% 20%, 15% 20%, 16% 15%, 17% 20%, 18% 20%, 18% 55%,
+    20% 55%, 20% 35%, 22% 35%, 22% 55%,
+    24% 55%, 24% 50%, 26% 50%, 26% 55%,
+    28% 55%, 28% 25%, 30% 25%, 30% 55%,
+    32% 55%, 32% 40%, 34% 40%, 34% 55%,
+    36% 55%, 36% 30%, 38% 28%, 40% 30%, 40% 55%,
+    42% 55%, 42% 45%, 44% 45%, 44% 55%,
+    46% 55%, 46% 20%, 47% 18%, 48% 15%, 49% 18%, 50% 20%, 50% 55%,
+    52% 55%, 52% 35%, 54% 35%, 54% 55%,
+    56% 55%, 56% 42%, 58% 42%, 58% 55%,
+    60% 55%, 60% 28%, 62% 28%, 62% 55%,
+    64% 55%, 64% 38%, 66% 38%, 66% 55%,
+    68% 55%, 68% 22%, 70% 20%, 72% 22%, 72% 55%,
+    74% 55%, 74% 40%, 76% 40%, 76% 55%,
+    78% 55%, 78% 32%, 80% 32%, 80% 55%,
+    82% 55%, 82% 48%, 84% 48%, 84% 55%,
+    86% 55%, 86% 25%, 88% 25%, 88% 55%,
+    90% 55%, 90% 42%, 92% 42%, 92% 55%,
+    94% 55%, 94% 35%, 96% 35%, 96% 55%,
+    98% 55%, 98% 60%,
+    100% 60%, 100% 100%
+  );
+}
+
+/* Carmen silhouette */
+.silhouette-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.carmen-silhouette {
+  position: absolute;
+  right: 12%;
+  bottom: 140px;
+  width: 180px;
+  height: 300px;
+  background: rgba(192, 57, 43, 0.15);
+  clip-path: polygon(
+    40% 0%,
+    60% 0%,
+    65% 8%,
+    70% 5%,
+    75% 10%,
+    72% 15%,
+    68% 12%,
+    65% 18%,
+    70% 25%,
+    75% 40%,
+    80% 55%,
+    85% 70%,
+    82% 80%,
+    75% 85%,
+    70% 90%,
+    65% 100%,
+    35% 100%,
+    30% 90%,
+    25% 85%,
+    18% 80%,
+    15% 70%,
+    20% 55%,
+    25% 40%,
+    30% 25%,
+    35% 18%,
+    32% 12%,
+    28% 15%,
+    25% 10%,
+    30% 5%,
+    35% 8%
+  );
+  animation: silhouetteFloat 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 30px rgba(192, 57, 43, 0.4));
+}
+
+@keyframes silhouetteFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Title Overlay */
+.title-overlay {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+}
+
+.acme-logo {
+  animation: fadeSlideIn 0.8s ease 0.2s both;
+}
+
+.game-title {
+  animation: fadeSlideIn 0.8s ease 0.5s both;
+}
+
+.title-main {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  color: var(--acme-red);
+  text-shadow:
+    0 0 30px rgba(192, 57, 43, 0.6),
+    2px 2px 0 #8b1a10;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.title-sub {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.8vw, 1.2rem);
+  color: var(--acme-gold);
+  letter-spacing: 6px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeSlideIn 0.8s ease 0.8s both;
+}
+
+.menu-btn {
+  min-width: 260px;
+  padding: 16px 40px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.menu-btn.primary {
+  background: linear-gradient(135deg, var(--acme-red), var(--acme-red-dark));
+  color: white;
+  box-shadow: 0 6px 25px rgba(192, 57, 43, 0.5);
+}
+
+.menu-btn.primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 35px rgba(192, 57, 43, 0.6);
+}
+
+.menu-btn.secondary {
+  background: transparent;
+  color: var(--acme-gold);
+  border: 2px solid rgba(212, 172, 13, 0.5);
+}
+
+.menu-btn.secondary:hover:not(:disabled) {
+  background: rgba(212, 172, 13, 0.1);
+  border-color: var(--acme-gold);
+}
+
+.menu-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.menu-footer {
+  animation: fadeSlideIn 0.8s ease 1.1s both;
+}
+
+.rank-display {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--acme-gold);
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* ===== Case Select Screen ===== */
+.case-select-container {
+  width: 100%;
+  height: 100%;
+  background: var(--acme-navy);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.case-select-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.case-select-header h2 {
+  font-family: var(--font-display);
+  color: var(--acme-gold);
+  letter-spacing: 4px;
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  overflow-y: auto;
+  padding-right: 8px;
+  flex: 1;
+}
+
+.case-card {
+  background: var(--acme-navy-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.case-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--acme-red), var(--acme-gold));
+}
+
+.case-card:hover:not(.locked) {
+  border-color: var(--acme-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.case-card.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.case-card.completed {
+  border-color: rgba(39, 174, 96, 0.4);
+}
+
+.case-card.completed::before {
+  background: linear-gradient(90deg, #27ae60, #2ecc71);
+}
+
+.case-num {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--acme-gold);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.case-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-white);
+  margin-bottom: 6px;
+}
+
+.case-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.case-crime-city {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.case-status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  letter-spacing: 1px;
+}
+
+.case-status-badge.completed {
+  background: rgba(39, 174, 96, 0.2);
+  color: #2ecc71;
+  border: 1px solid rgba(39, 174, 96, 0.4);
+}
+
+.case-status-badge.locked {
+  background: rgba(100,100,100,0.2);
+  color: #888;
+  border: 1px solid rgba(100,100,100,0.3);
+}
+
+.case-status-badge.available {
+  background: rgba(192, 57, 43, 0.2);
+  color: var(--acme-red);
+  border: 1px solid rgba(192, 57, 43, 0.4);
+}
