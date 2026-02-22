@@ -110,7 +110,7 @@ const Game = {
     const loc = this.currentLocationData;
     const caseData = this.currentCaseData;
 
-    if (loc && loc.music) AudioManager.play(loc.music);
+    if (loc && loc.region) AudioManager.play(loc.region);
 
     const fieldAgent = this.getFieldAgentForCity();
 

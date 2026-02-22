@@ -78,11 +78,23 @@ function showLocation(loc, caseData, state, fieldAgent, callbacks) {
 
   if (!loc) return;
 
-  // City visuals
+  // City visuals — real landmark photo with colour-tinted fallback
   const cityImage = document.getElementById('city-image');
   if (cityImage) {
-    cityImage.innerHTML = `<span>${getCityEmoji(loc.id)}</span>`;
-    cityImage.style.background = `linear-gradient(135deg, ${loc.color || '#1a1f36'} 0%, #0a0a15 100%)`;
+    const imgPath = `assets/images/locations/${loc.id}.jpg`;
+    cityImage.innerHTML = '';
+    cityImage.style.backgroundImage = `url('${imgPath}')`;
+    cityImage.style.backgroundSize  = 'cover';
+    cityImage.style.backgroundPosition = 'center';
+    // Fallback: if image fails to load, show gradient + emoji
+    const testImg = new Image();
+    testImg.onload = () => {};
+    testImg.onerror = () => {
+      cityImage.style.backgroundImage = 'none';
+      cityImage.style.background = `linear-gradient(135deg, ${loc.color || '#1a1f36'} 0%, #0a0a15 100%)`;
+      cityImage.innerHTML = `<span style="font-size:8rem">${getCityEmoji(loc.id)}</span>`;
+    };
+    testImg.src = imgPath;
   }
 
   setEl('city-name', loc.name);
@@ -290,7 +302,7 @@ function showTravelScreen(choices, onSelect) {
     const card = document.createElement('div');
     card.className = 'dest-card animate-in';
     card.innerHTML = `
-      <span class="dest-card-emoji">${getCityEmoji(choice.id)}</span>
+      <div class="dest-card-thumb" style="background-image:url('assets/images/locations/${choice.id}.jpg');background-size:cover;background-position:center;width:100%;height:110px;border-radius:8px;margin-bottom:12px;background-color:${choice.color||'#1a1f36'}"></div>
       <div class="dest-card-name">${escapeHtml(choice.name)}</div>
       <div class="dest-card-country">${escapeHtml(choice.country)}</div>
       <div class="dest-card-region">${escapeHtml(choice.region)}</div>
