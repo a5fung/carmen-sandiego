@@ -112,7 +112,7 @@ const Game = {
 
     // Play the case-specific theme (each of 8 cases has a distinct sound)
     // Always restarts so the player hears the travel fade-out/in on each city entry
-    AudioManager.playCase(this.state.currentCase);
+    AudioManager.playCity(this.state.currentCity);
 
     const fieldAgent = this.getFieldAgentForCity();
 

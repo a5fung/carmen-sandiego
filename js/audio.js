@@ -13,42 +13,64 @@ const AudioManager = (() => {
   let activeNodes = [];
   let pendingPlayRegion = null;
 
-  // ── Profiles: 6 regional + 8 case-specific + 1 intro ─────────────────────
+  // ── Profiles: per-city (35) + regional fallbacks + intro ────────────────
   const PROFILES = {
-    // ── Regional (fallbacks) ─────────────────────────────────────────────────
-    Europe:        { scale:[0,2,4,5,7,9,11],  root:261.63, tempo:72,  timbre:'strings', pad:true,  arp:true,  bassNote:130.81 },
-    Asia:          { scale:[0,2,4,7,9],        root:293.66, tempo:60,  timbre:'bells',   pad:true,  arp:true,  bassNote:146.83 },
-    Americas:      { scale:[0,3,5,7,10],       root:261.63, tempo:90,  timbre:'guitar',  pad:true,  arp:true,  bassNote:130.81 },
-    Africa:        { scale:[0,2,3,5,7,9,10],   root:220.00, tempo:100, timbre:'marimba', pad:false, arp:true,  bassNote:110.00 },
-    Oceania:       { scale:[0,2,4,6,7,9,11],   root:261.63, tempo:55,  timbre:'pad',     pad:true,  arp:false, bassNote:130.81 },
-    'Middle East': { scale:[0,1,4,5,7,8,10],   root:293.66, tempo:65,  timbre:'oud',     pad:true,  arp:true,  bassNote:146.83 },
+    // ── Regional fallbacks ──────────────────────────────────────────────────
+    Europe:        { scale:[0,2,4,5,7,9,11], root:261.63, tempo:72,  timbre:'strings', pad:true,  arp:true,  bassNote:130.81 },
+    Asia:          { scale:[0,2,4,7,9],       root:293.66, tempo:60,  timbre:'bells',   pad:true,  arp:true,  bassNote:146.83 },
+    Americas:      { scale:[0,3,5,7,10],      root:261.63, tempo:90,  timbre:'guitar',  pad:true,  arp:true,  bassNote:130.81 },
+    Africa:        { scale:[0,2,3,5,7,9,10],  root:220.00, tempo:100, timbre:'marimba', pad:false, arp:true,  bassNote:110.00 },
+    Oceania:       { scale:[0,2,4,6,7,9,11],  root:261.63, tempo:55,  timbre:'pad',     pad:true,  arp:false, bassNote:130.81 },
+    'Middle East': { scale:[0,1,4,5,7,8,10],  root:293.66, tempo:65,  timbre:'oud',     pad:true,  arp:true,  bassNote:146.83 },
 
-    // ── Case 1: "Roman Rubble" — Mediterranean classical strings ─────────────
-    case_1: { scale:[0,2,4,5,7,9,11], root:261.63, tempo:72,  timbre:'strings', pad:true,  arp:true,  bassNote:130.81 },
+    // ── Title screen intro ──────────────────────────────────────────────────
+    '__intro__': { scale:[0,3,5,6,7,10], root:261.63, tempo:116, timbre:'brass', pad:false, arp:true, bassNote:130.81 },
 
-    // ── Case 2: "Pharaoh's Fury" — Maqam oud, mysterious & tense ─────────────
-    case_2: { scale:[0,1,4,5,7,8,10], root:220.00, tempo:63,  timbre:'oud',     pad:true,  arp:true,  bassNote:110.00 },
+    // ── Europe ─────────────────────────────────────────────────────────────
+    rome:        { scale:[0,2,4,5,7,9,11], root:293.66, tempo:72,  timbre:'strings', pad:true,  arp:true,  bassNote:146.83 }, // D major — classical grandeur
+    paris:       { scale:[0,2,4,6,7,9,11], root:349.23, tempo:66,  timbre:'strings', pad:true,  arp:true,  bassNote:174.61 }, // F Lydian — romantic, dreamy
+    london:      { scale:[0,2,3,5,7,9,10], root:246.94, tempo:76,  timbre:'pad',     pad:true,  arp:true,  bassNote:123.47 }, // B Dorian — cool, misty
+    berlin:      { scale:[0,1,3,5,7,8,10], root:329.63, tempo:90,  timbre:'marimba', pad:false, arp:true,  bassNote:164.81 }, // E Phrygian — industrial, driving
+    madrid:      { scale:[0,1,3,5,7,8,10], root:220.00, tempo:84,  timbre:'guitar',  pad:false, arp:true,  bassNote:110.00 }, // A Phrygian — flamenco passion
+    athens:      { scale:[0,2,3,5,7,9,10], root:392.00, tempo:58,  timbre:'bells',   pad:true,  arp:true,  bassNote:196.00 }, // G Dorian — ancient, philosophical
+    amsterdam:   { scale:[0,2,4,5,7,9,11], root:277.18, tempo:82,  timbre:'marimba', pad:false, arp:true,  bassNote:138.59 }, // C# major — bright, bustling
+    vienna:      { scale:[0,2,4,5,7,9,11], root:415.30, tempo:63,  timbre:'strings', pad:true,  arp:true,  bassNote:207.65 }, // Ab major — waltz, grand
+    prague:      { scale:[0,2,3,5,7,8,10], root:369.99, tempo:60,  timbre:'oud',     pad:true,  arp:true,  bassNote:185.00 }, // F# minor — gothic, mysterious
+    lisbon:      { scale:[0,3,5,7,10],     root:220.00, tempo:54,  timbre:'oud',     pad:true,  arp:true,  bassNote:110.00 }, // A min pent — fado, melancholic
 
-    // ── Case 3: "Jade Dragon" — East Asian pentatonic bells ──────────────────
-    case_3: { scale:[0,2,4,7,9],      root:293.66, tempo:58,  timbre:'bells',   pad:true,  arp:true,  bassNote:146.83 },
+    // ── Asia ───────────────────────────────────────────────────────────────
+    tokyo:       { scale:[0,2,4,7,9],      root:329.63, tempo:92,  timbre:'bells',   pad:false, arp:true,  bassNote:164.81 }, // E pentatonic — bright, modern
+    beijing:     { scale:[0,2,4,7,9],      root:261.63, tempo:54,  timbre:'strings', pad:true,  arp:true,  bassNote:130.81 }, // C pentatonic — imperial, ancient
+    bangkok:     { scale:[0,2,4,5,7,9,10], root:233.08, tempo:74,  timbre:'pad',     pad:true,  arp:true,  bassNote:116.54 }, // Bb Mixolydian — tropical, ornate
+    mumbai:      { scale:[0,1,4,5,7,9,10], root:392.00, tempo:100, timbre:'marimba', pad:false, arp:true,  bassNote:196.00 }, // G raga — high energy
+    istanbul:    { scale:[0,1,4,5,7,8,10], root:293.66, tempo:66,  timbre:'oud',     pad:true,  arp:true,  bassNote:146.83 }, // D Hijaz — Ottoman crossroads
+    seoul:       { scale:[0,2,4,7,9],      root:369.99, tempo:86,  timbre:'bells',   pad:false, arp:true,  bassNote:185.00 }, // F# pentatonic — crisp, modern
+    singapore:   { scale:[0,2,4,6,7,9,11], root:277.18, tempo:90,  timbre:'pad',     pad:false, arp:true,  bassNote:138.59 }, // C# Lydian — futuristic, clean
+    kathmandu:   { scale:[0,2,5,7,9],      root:349.23, tempo:46,  timbre:'bells',   pad:true,  arp:false, bassNote:174.61 }, // F sus — mystical, high altitude
 
-    // ── Case 4: "Amazon Gold" — Latin minor pentatonic guitar ────────────────
-    case_4: { scale:[0,3,5,7,10],     root:233.08, tempo:96,  timbre:'guitar',  pad:false, arp:true,  bassNote:116.54 },
+    // ── Americas ───────────────────────────────────────────────────────────
+    new_york:       { scale:[0,3,5,6,7,10],    root:233.08, tempo:112, timbre:'brass',   pad:false, arp:true, bassNote:116.54 }, // Bb blues — jazz bebop
+    mexico_city:    { scale:[0,2,4,5,7,9,11],  root:392.00, tempo:104, timbre:'guitar',  pad:false, arp:true, bassNote:196.00 }, // G major — mariachi, festive
+    buenos_aires:   { scale:[0,2,3,5,7,8,10],  root:329.63, tempo:86,  timbre:'strings', pad:true,  arp:true, bassNote:164.81 }, // E minor — tango, passionate
+    rio_de_janeiro: { scale:[0,2,4,7,9],        root:293.66, tempo:116, timbre:'marimba', pad:false, arp:true, bassNote:146.83 }, // D pentatonic — samba carnival
+    havana:         { scale:[0,2,4,5,7,9,11],   root:415.30, tempo:108, timbre:'brass',   pad:false, arp:true, bassNote:207.65 }, // Ab major — salsa, tropical
+    lima:           { scale:[0,3,5,7,10],        root:349.23, tempo:70,  timbre:'bells',   pad:true,  arp:true, bassNote:174.61 }, // F min pent — Andean, serene
 
-    // ── Case 5: "Pacific Heist" — Open Lydian pads, expansive ────────────────
-    case_5: { scale:[0,2,4,6,7,9,11], root:277.18, tempo:58,  timbre:'pad',     pad:true,  arp:false, bassNote:138.59 },
+    // ── Africa ─────────────────────────────────────────────────────────────
+    cairo:       { scale:[0,1,4,5,7,8,10], root:220.00, tempo:58,  timbre:'oud',     pad:true,  arp:true,  bassNote:110.00 }, // A Hijaz — Egyptian, ancient
+    nairobi:     { scale:[0,2,4,7,9],      root:196.00, tempo:88,  timbre:'marimba', pad:false, arp:true,  bassNote:98.00  }, // G pentatonic — African rhythms
+    cape_town:   { scale:[0,2,4,5,7,9,11], root:261.63, tempo:76,  timbre:'guitar',  pad:false, arp:true,  bassNote:130.81 }, // C major — open, hopeful
+    casablanca:  { scale:[0,2,3,5,7,8,10], root:185.00, tempo:62,  timbre:'oud',     pad:true,  arp:true,  bassNote:92.50  }, // F# minor — Moroccan, mysterious
+    marrakech:   { scale:[0,1,3,5,7,8,10], root:293.66, tempo:96,  timbre:'marimba', pad:false, arp:true,  bassNote:146.83 }, // D Phrygian — souk, vibrant
 
-    // ── Case 6: "Northern Lights" — Sparse Dorian marimba, cold ─────────────
-    case_6: { scale:[0,2,3,5,7,8,10], root:246.94, tempo:52,  timbre:'marimba', pad:true,  arp:true,  bassNote:123.47 },
+    // ── Oceania ────────────────────────────────────────────────────────────
+    sydney:    { scale:[0,2,4,5,7,9,11], root:440.00, tempo:78, timbre:'strings', pad:true,  arp:true, bassNote:220.00 }, // A major — sunny harbour
+    auckland:  { scale:[0,2,4,6,7,9,11], root:329.63, tempo:65, timbre:'pad',     pad:true,  arp:true, bassNote:164.81 }, // E Lydian — expansive, peaceful
+    honolulu:  { scale:[0,2,4,7,9],      root:349.23, tempo:74, timbre:'marimba', pad:false, arp:true, bassNote:174.61 }, // F pentatonic — Hawaiian, relaxed
 
-    // ── Case 7: "Double Cross" — Jazz melodic minor strings ──────────────────
-    case_7: { scale:[0,2,3,5,7,9,11], root:293.66, tempo:92,  timbre:'strings', pad:true,  arp:true,  bassNote:146.83 },
-
-    // ── Case 8: "The Final Chase" — Intense brass spy theme, fast ────────────
-    case_8: { scale:[0,3,5,6,7,10],   root:311.13, tempo:132, timbre:'brass',   pad:false, arp:true,  bassNote:155.56 },
-
-    // ── Title screen — jazzy spy detective intro ──────────────────────────────
-    '__intro__': { scale:[0,3,5,6,7,10], root:261.63, tempo:116, timbre:'brass', pad:false, arp:true, bassNote:130.81 }
+    // ── Middle East ────────────────────────────────────────────────────────
+    dubai:      { scale:[0,2,4,6,8,10], root:277.18, tempo:98, timbre:'pad',     pad:false, arp:true, bassNote:138.59 }, // C# whole tone — ultramodern
+    jerusalem:  { scale:[0,2,3,5,7,8,10], root:196.00, tempo:52, timbre:'strings', pad:true, arp:true, bassNote:98.00 }, // G minor — ancient, sacred
   };
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -281,9 +303,9 @@ const AudioManager = (() => {
     }
   }
 
-  // Play the case-specific theme; always restarts for city-travel feedback
-  function playCase(caseId) {
-    play('case_' + caseId, true);
+  // Play the city-specific theme; always restarts for city-travel feedback
+  function playCity(cityId) {
+    play(cityId, true);
   }
 
   // Play title-screen intro immediately (fast 0.8s fade-in, no pre-delay)
@@ -339,5 +361,5 @@ const AudioManager = (() => {
     else tryPending();
   }, { once: true });
 
-  return { play, playCase, playIntro, stop, toggle, isEnabled };
+  return { play, playCity, playIntro, stop, toggle, isEnabled };
 })();
