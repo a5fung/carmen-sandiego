@@ -30,7 +30,11 @@
           <h1 class="title-main">Carmen Sandiego</h1>
           <h2 class="title-sub">Operation: Empty the World</h2>
         </div>
-        <div class="menu-buttons">
+        <div class="press-start" id="press-start">
+          <div class="press-start-ring"></div>
+          <p class="press-start-text">Click anywhere to begin</p>
+        </div>
+        <div class="menu-buttons" id="menu-buttons" style="opacity:0;pointer-events:none;transform:translateY(10px)">
           <button class="menu-btn primary" id="btn-new-game">New Game</button>
           <button class="menu-btn secondary" id="btn-continue" disabled>Continue</button>
           <button class="menu-btn secondary" id="btn-case-select" disabled>Case Select</button>

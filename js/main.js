@@ -33,10 +33,6 @@ if (isMenuPage) {
   (async () => {
     await Game.init();
 
-    // Queue intro music — will start playing on first user interaction
-    // (browser autoplay policy requires a user gesture before audio can run)
-    AudioManager.playIntro();
-
     const hasSave        = Game.hasSave();
     const rank           = Game.getRank();
     const completedCases = Game.getCompletedCases();
@@ -67,6 +63,33 @@ if (isMenuPage) {
     document.getElementById('btn-back-from-cases')?.addEventListener('click', () => {
       showScreen('title-screen');
     });
+
+    // ── Press-to-start handler ─────────────────────────────────────────────
+    // Browser autoplay policy blocks audio until the first user gesture.
+    // The press-start overlay captures that click, starts the intro music,
+    // then fades away to reveal the interactive menu buttons.
+    const pressStart  = document.getElementById('press-start');
+    const menuButtons = document.getElementById('menu-buttons');
+
+    if (pressStart) {
+      document.addEventListener('click', () => {
+        // Start intro music — now we have a user gesture so AudioContext works
+        AudioManager.playIntro();
+
+        // Fade out the press-start prompt
+        pressStart.style.transition = 'opacity 0.4s ease';
+        pressStart.style.opacity    = '0';
+        setTimeout(() => { pressStart.style.display = 'none'; }, 400);
+
+        // Reveal the menu buttons
+        if (menuButtons) {
+          menuButtons.style.transition  = 'opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s';
+          menuButtons.style.opacity     = '1';
+          menuButtons.style.transform   = 'translateY(0)';
+          menuButtons.style.pointerEvents = 'auto';
+        }
+      }, { once: true });
+    }
   })();
 }
 

@@ -171,11 +171,42 @@
   text-transform: uppercase;
 }
 
+/* ===== Press-to-Start Overlay ===== */
+.press-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: fadeSlideIn 0.8s ease 0.8s both;
+}
+
+.press-start-ring {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--acme-gold);
+  border-radius: 50%;
+  animation: pressRingPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pressRingPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.9; }
+  50%       { transform: scale(1.3); opacity: 0.3; }
+}
+
+.press-start-text {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: var(--acme-gold);
+  text-transform: uppercase;
+  opacity: 0.8;
+  animation: pulse 2s ease-in-out infinite;
+}
+
 .menu-buttons {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  animation: fadeSlideIn 0.8s ease 0.8s both;
 }
 
 .menu-btn {

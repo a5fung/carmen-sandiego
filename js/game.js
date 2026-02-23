@@ -110,9 +110,9 @@ const Game = {
     const loc = this.currentLocationData;
     const caseData = this.currentCaseData;
 
-    // Force a music restart on every city entry so the player hears travel feedback
-    // even when consecutive cities share the same region
-    if (loc && loc.region) AudioManager.play(loc.region, true);
+    // Play the case-specific theme (each of 8 cases has a distinct sound)
+    // Always restarts so the player hears the travel fade-out/in on each city entry
+    AudioManager.playCase(this.state.currentCase);
 
     const fieldAgent = this.getFieldAgentForCity();
 

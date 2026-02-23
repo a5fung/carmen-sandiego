@@ -1142,9 +1142,9 @@
 @media (max-width: 768px) {
   .game-layout {
     grid-template-columns: 1fr;
-    grid-template-rows: 35vh 1fr;   /* slightly shorter city panel = more room for actions */
+    grid-template-rows: 32vh 1fr;
     height: calc(100vh - 44px);
-    height: calc(100svh - 44px);    /* small viewport — excludes browser chrome on mobile */
+    height: calc(100svh - 44px);
   }
 
   .city-panel {
@@ -1153,22 +1153,44 @@
   }
 
   .city-name {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
+  /* Make action panel fill remaining height and scroll properly on iOS */
   .action-panel {
-    -webkit-overflow-scrolling: touch;   /* smooth momentum scroll on iOS */
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tighter section padding on mobile */
+  .clue-sources-section,
+  .clue-reveal-area,
+  .clues-log-section,
+  .dossier-section,
+  .navigation-section {
+    padding: 10px 14px;
   }
 
   .navigation-section {
-    padding-bottom: 80px;   /* extra clearance above the fixed status bar */
+    padding-bottom: 80px;
   }
 
+  /* Compact status bar — hide text labels, reduce gap */
   .status-bar {
-    /* Account for iOS notch / safe area */
+    gap: 10px;
+    padding: 0 10px;
     padding-bottom: env(safe-area-inset-bottom, 0px);
     height: auto;
     min-height: 44px;
+  }
+
+  .status-label {
+    display: none;
+  }
+
+  .status-value {
+    font-size: 0.75rem;
   }
 
   .briefing-body {
