@@ -33,6 +33,10 @@ if (isMenuPage) {
   (async () => {
     await Game.init();
 
+    // Queue intro music — will start playing on first user interaction
+    // (browser autoplay policy requires a user gesture before audio can run)
+    AudioManager.playIntro();
+
     const hasSave        = Game.hasSave();
     const rank           = Game.getRank();
     const completedCases = Game.getCompletedCases();
