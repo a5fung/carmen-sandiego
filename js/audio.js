@@ -386,11 +386,12 @@ const AudioManager = (() => {
 
   // ── Public API ────────────────────────────────────────────────────────────
 
-  function play(region) {
+  // forceRestart = true: always restart even if same region (e.g. travelling to a new city)
+  function play(region, forceRestart) {
     if (!enabled) return;
 
-    // Only skip if this exact region is already actively playing
-    if (region === currentRegion && schedulerTimer !== null) return;
+    // Skip only if same region is already playing AND caller didn't force a restart
+    if (!forceRestart && region === currentRegion && schedulerTimer !== null) return;
 
     currentRegion = region;
     const profile = PROFILES[region] || PROFILES['Europe'];
@@ -412,7 +413,7 @@ const AudioManager = (() => {
   }
 
   function playIntro() {
-    play('__intro__');
+    play('__intro__', true);
   }
 
   function stop() {

@@ -110,7 +110,9 @@ const Game = {
     const loc = this.currentLocationData;
     const caseData = this.currentCaseData;
 
-    if (loc && loc.region) AudioManager.play(loc.region);
+    // Force a music restart on every city entry so the player hears travel feedback
+    // even when consecutive cities share the same region
+    if (loc && loc.region) AudioManager.play(loc.region, true);
 
     const fieldAgent = this.getFieldAgentForCity();
 
