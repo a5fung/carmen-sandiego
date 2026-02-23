@@ -168,7 +168,7 @@ const Game = {
 
     revealClue(source, clueText, getSourceLabel(source), this.state);
     updateDossier(this.state.dossier);
-    updateWarrantButton(confirmed >= 3 && !this.state.warrantIssued);
+    updateWarrantButton(confirmed >= 3);
 
     if (this.state.cluesUsed.length >= 1) {
       const isFinal = isFinalCity(this.currentCaseData, this.state.currentCity);
@@ -233,11 +233,30 @@ const Game = {
     }
 
     if (!this.state.warrantIssued) {
-      // Guide the player instead of immediately ending the case
-      showArrestHint("You need an arrest warrant first! Scroll up to the Suspect Dossier — once you've confirmed 3 traits, the Request Warrant button will light up.");
+      const confirmedTraits = countConfirmedTraits(this.state.dossier);
+      if (confirmedTraits < 3) {
+        showArrestHint(`You need at least 3 suspect traits before you can issue a warrant (you have ${confirmedTraits}/5). Use the clue sources above — especially Interview Witness — to learn more about the suspect's appearance.`);
+      } else {
+        showArrestHint("You have enough traits! Scroll up to the Suspect Dossier and click Request Warrant, then pick the matching criminal to issue the warrant.");
+      }
       return;
-    } else if (this.state.warrantTarget !== this.currentCaseData.suspect) {
-      this.showArrestResult('wrong_warrant');
+    }
+
+    if (this.state.warrantTarget !== this.currentCaseData.suspect) {
+      // Wrong warrant — penalise moves but let the player try again (no game over)
+      const wrongName = this.state.warrantTarget
+        ? this.state.warrantTarget.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+        : 'an unknown suspect';
+      this.state.movesUsed += 3;
+      this.state.warrantIssued = false;
+      this.state.warrantTarget = null;
+      saveState(this.state);
+      setEl('status-moves', this.state.movesUsed);
+      updateWarrantStatus(false, null);
+      updateWarrantButton(countConfirmedTraits(this.state.dossier) >= 3);
+      const warrantBtn = document.getElementById('btn-request-warrant');
+      if (warrantBtn) warrantBtn.textContent = 'Request Warrant';
+      showArrestHint(`Wrong arrest! Your warrant was for ${wrongName} — that's not the criminal. You lose 3 moves. Re-check your dossier clues and issue a new warrant for the right suspect.`);
     } else {
       this.showArrestResult('success');
     }

@@ -127,11 +127,14 @@ function showLocation(loc, caseData, state, fieldAgent, callbacks) {
   // Dossier
   updateDossier(state.dossier);
 
-  // Warrant button
+  // Warrant button — always accessible once 3+ traits known, even to change an issued warrant
   const confirmedCount = Object.values(state.dossier).filter(v => v !== null).length;
-  updateWarrantButton(confirmedCount >= 3 && !state.warrantIssued);
   const warrantBtn = document.getElementById('btn-request-warrant');
-  if (warrantBtn) warrantBtn.onclick = () => { if (_locCallbacks.onRequestWarrant) _locCallbacks.onRequestWarrant(); };
+  if (warrantBtn) {
+    warrantBtn.disabled = confirmedCount < 3;
+    warrantBtn.textContent = state.warrantIssued ? 'Change Warrant' : 'Request Warrant';
+    warrantBtn.onclick = () => { if (_locCallbacks.onRequestWarrant) _locCallbacks.onRequestWarrant(); };
+  }
 
   // Destination / Arrest button
   const isFinal = caseData.path[caseData.path.length - 1] === state.currentCity;
@@ -359,17 +362,31 @@ function showWarrantScreen(suspects, dossier, onIssue) {
   if (!lineup) return;
   lineup.innerHTML = '';
 
+  const knownCount = Object.values(dossier).filter(v => v !== null).length;
+
+  // Sort suspects by how many known dossier traits they match (best match first)
+  const sorted = [...suspects].sort((a, b) => {
+    const traitKeys = ['gender', 'hair', 'eyes', 'feature', 'hobby'];
+    const scoreA = traitKeys.filter(t => dossier[t] && dossier[t] === a[t]).length;
+    const scoreB = traitKeys.filter(t => dossier[t] && dossier[t] === b[t]).length;
+    return scoreB - scoreA;
+  });
+
   let selectedId = null;
-  suspects.forEach(suspect => {
+  sorted.forEach(suspect => {
     const card = document.createElement('div');
     card.className = 'suspect-card';
-    const pills = ['gender','hair','eyes','feature','hobby'].map(t => {
+    const traitKeys = ['gender', 'hair', 'eyes', 'feature', 'hobby'];
+    const matchCount = traitKeys.filter(t => dossier[t] && dossier[t] === suspect[t]).length;
+    const pills = traitKeys.map(t => {
       const matches = dossier[t] && dossier[t] === suspect[t];
       return `<span class="trait-pill ${matches ? 'match' : ''}">${escapeHtml(suspect[t] || '?')}</span>`;
     }).join('');
+    const isPerfect = knownCount > 0 && matchCount === knownCount;
     card.innerHTML = `
       <div class="suspect-mugshot">${getSuspectEmoji(suspect.id)}</div>
       <div class="suspect-name">${escapeHtml(suspect.name)}</div>
+      <div class="suspect-match-score ${isPerfect ? 'perfect-match' : ''}">${matchCount}/${knownCount} traits match</div>
       <div class="suspect-trait-pills">${pills}</div>
     `;
     card.onclick = () => {
