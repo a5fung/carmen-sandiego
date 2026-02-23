@@ -10,6 +10,14 @@ if (isGamePage) {
   (async () => {
     await Game.init();
 
+    // New Game: clear all previous progress before starting
+    const isNewGame = localStorage.getItem('carmen_new_game');
+    if (isNewGame) {
+      localStorage.removeItem('carmen_new_game');
+      await Game.newGame();
+      return;
+    }
+
     const pendingCase = localStorage.getItem('carmen_pending_case');
     if (pendingCase) {
       localStorage.removeItem('carmen_pending_case');
@@ -46,7 +54,7 @@ if (isMenuPage) {
     if (rankDisplay && hasSave) rankDisplay.textContent = `Rank: ${rank}`;
 
     document.getElementById('btn-new-game')?.addEventListener('click', () => {
-      localStorage.setItem('carmen_pending_case', '1');
+      localStorage.setItem('carmen_new_game', '1');
       window.location.href = 'game.html';
     });
 

@@ -8,7 +8,7 @@ const AudioManager = (() => {
   let ctx = null;
   let masterGain = null;
   let currentRegion = null;
-  let enabled = true;
+  let enabled = localStorage.getItem('carmen_audio_enabled') !== 'false';
   let schedulerTimer = null;
   let activeNodes = [];
   let pendingPlayRegion = null;
@@ -331,6 +331,7 @@ const AudioManager = (() => {
 
   function toggle() {
     enabled = !enabled;
+    localStorage.setItem('carmen_audio_enabled', String(enabled));
     if (!enabled) {
       stop();
     } else {

@@ -176,9 +176,10 @@ function showLocation(loc, caseData, state, fieldAgent, callbacks) {
     agentPanel.classList.add('hidden');
   }
 
-  // Audio toggle
+  // Audio toggle — sync text with current state on every render
   const audioBtn = document.getElementById('btn-toggle-audio');
   if (audioBtn) {
+    audioBtn.textContent = AudioManager.isEnabled() ? '♪ Music ON' : '♪ Music OFF';
     audioBtn.onclick = () => {
       const enabled = AudioManager.toggle();
       audioBtn.textContent = enabled ? '♪ Music ON' : '♪ Music OFF';
@@ -277,6 +278,12 @@ function addClueToLog(source, text) {
 
 // ===== Dossier =====
 function updateDossier(dossier) {
+  const confirmed = ['gender', 'hair', 'eyes', 'feature', 'hobby']
+    .filter(t => dossier[t] !== null && dossier[t] !== undefined).length;
+
+  const countEl = document.getElementById('dossier-trait-count');
+  if (countEl) countEl.textContent = `${confirmed}/5`;
+
   ['gender', 'hair', 'eyes', 'feature', 'hobby'].forEach(trait => {
     const row = document.getElementById(`dossier-${trait}`);
     if (!row) return;
@@ -305,7 +312,7 @@ function updateWarrantStatus(issued, targetId) {
   if (issued && targetId) {
     const name = targetId.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
     el.textContent = `Issued: ${name}`;
-    el.style.color = '#e74c3c';
+    el.style.color = 'var(--acme-red)';
   } else {
     el.textContent = 'Not Issued';
     el.style.color = '';
