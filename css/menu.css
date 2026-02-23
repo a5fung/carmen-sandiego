@@ -203,6 +203,12 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
+.title-logo {
+  width: min(520px, 88vw);
+  height: auto;
+  display: block;
+}
+
 .menu-buttons {
   display: flex;
   flex-direction: column;

@@ -151,15 +151,17 @@ const Game = {
 
     const clueText = getClueText(this.currentCaseData, this.state.currentCity, source);
 
-    const trait = extractSuspectTrait(clueText, this.currentSuspectData);
-    if (trait && !this.state.dossier[trait.trait]) {
-      this.state.dossier[trait.trait] = trait.value;
+    // Extract ALL traits a clue reveals (e.g. "a man carrying a gym bag" → gender + hobby)
+    const traits = extractSuspectTraits(clueText, this.currentSuspectData);
+    for (const t of traits) {
+      if (!this.state.dossier[t.trait]) this.state.dossier[t.trait] = t.value;
     }
+    const primaryTrait = traits[0] || null;
 
     if (!this.state.cluesUsed) this.state.cluesUsed = [];
     if (!this.state.cluesCollected) this.state.cluesCollected = [];
     this.state.cluesUsed.push(source);
-    this.state.cluesCollected.push({ source, text: clueText, trait: trait?.trait || null, value: trait?.value || null });
+    this.state.cluesCollected.push({ source, text: clueText, trait: primaryTrait?.trait || null, value: primaryTrait?.value || null });
 
     const confirmed = countConfirmedTraits(this.state.dossier);
     saveState(this.state);
@@ -231,7 +233,9 @@ const Game = {
     }
 
     if (!this.state.warrantIssued) {
-      this.showArrestResult('no_warrant');
+      // Guide the player instead of immediately ending the case
+      showArrestHint("You need an arrest warrant first! Scroll up to the Suspect Dossier — once you've confirmed 3 traits, the Request Warrant button will light up.");
+      return;
     } else if (this.state.warrantTarget !== this.currentCaseData.suspect) {
       this.showArrestResult('wrong_warrant');
     } else {

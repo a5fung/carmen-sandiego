@@ -27,8 +27,54 @@
           </div>
         </div>
         <div class="game-title">
-          <h1 class="title-main">Carmen Sandiego</h1>
-          <h2 class="title-sub">Operation: Empty the World</h2>
+          <svg class="title-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 258" aria-label="Carmen Sandiego — Operation: Empty the World">
+            <defs>
+              <filter id="cs-glow" x="-15%" y="-20%" width="130%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- Globe wireframe -->
+            <g fill="none" stroke="#d4ac0d" opacity="0.1" stroke-width="0.8">
+              <circle cx="260" cy="130" r="116"/>
+              <ellipse cx="260" cy="130" rx="116" ry="38"/>
+              <ellipse cx="260" cy="92"  rx="100" ry="32"/>
+              <ellipse cx="260" cy="168" rx="100" ry="32"/>
+              <ellipse cx="260" cy="58"  rx="59"  ry="19"/>
+              <ellipse cx="260" cy="202" rx="59"  ry="19"/>
+              <ellipse cx="260" cy="130" rx="56"  ry="116"/>
+              <ellipse cx="260" cy="130" rx="100" ry="116"/>
+            </g>
+            <!-- Hat shadow/glow -->
+            <ellipse cx="260" cy="70" rx="102" ry="20" fill="#c0392b" opacity="0.2"/>
+            <!-- Hat crown -->
+            <path d="M 200 68 C 198 40, 217 6, 252 4 Q 260 2, 268 4 C 303 6, 322 40, 320 68 Z" fill="#c0392b"/>
+            <!-- Crown crease -->
+            <path d="M 254 5 Q 260 3 266 5 L 268 68 L 252 68 Z" fill="#8b1a10" opacity="0.3"/>
+            <!-- Hat band shadow -->
+            <rect x="202" y="60" width="116" height="8"  rx="1.5" fill="#7b241c"/>
+            <!-- Gold ribbon -->
+            <rect x="202" y="61" width="116" height="2.5" fill="#d4ac0d" opacity="0.9"/>
+            <!-- Brim shadow -->
+            <ellipse cx="260" cy="69" rx="102" ry="16" fill="#7b241c"/>
+            <!-- Brim surface -->
+            <ellipse cx="260" cy="67" rx="98"  ry="14" fill="#c0392b"/>
+            <!-- CARMEN -->
+            <text x="260" y="141" font-family="Cinzel,Georgia,serif" font-size="72" font-weight="900"
+                  fill="#c0392b" text-anchor="middle" letter-spacing="4" filter="url(#cs-glow)">CARMEN</text>
+            <!-- SANDIEGO -->
+            <text x="260" y="194" font-family="Cinzel,Georgia,serif" font-size="40" font-weight="700"
+                  fill="#d4ac0d" text-anchor="middle" letter-spacing="10">SANDIEGO</text>
+            <!-- Rule -->
+            <line x1="50"  y1="210" x2="204" y2="210" stroke="#d4ac0d" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="208" cy="210" r="2" fill="#d4ac0d" opacity="0.5"/>
+            <line x1="212" y1="210" x2="308" y2="210" stroke="#d4ac0d" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="312" cy="210" r="2" fill="#d4ac0d" opacity="0.5"/>
+            <line x1="316" y1="210" x2="470" y2="210" stroke="#d4ac0d" stroke-width="0.8" opacity="0.4"/>
+            <!-- Subtitle -->
+            <text x="260" y="234" font-family="Cinzel,Georgia,serif" font-size="10" fill="#d4ac0d"
+                  text-anchor="middle" letter-spacing="4" opacity="0.6">OPERATION: EMPTY THE WORLD</text>
+          </svg>
         </div>
         <div class="press-start" id="press-start">
           <div class="press-start-ring"></div>

@@ -137,15 +137,25 @@ function showLocation(loc, caseData, state, fieldAgent, callbacks) {
   const isFinal = caseData.path[caseData.path.length - 1] === state.currentCity;
   const hasClues = (state.cluesUsed || []).length >= 1;
   const destBtn = document.getElementById('btn-choose-destination');
+  const navHint = document.getElementById('nav-hint');
   if (destBtn) {
     if (isFinal) {
       destBtn.textContent = '🚔 Make Arrest';
       destBtn.disabled = !hasClues;
       destBtn.onclick = hasClues ? () => { if (_locCallbacks.onArrest) _locCallbacks.onArrest(); } : null;
+      if (navHint) {
+        if (!hasClues) {
+          navHint.textContent = 'Investigate the scene first, then make your arrest.';
+          navHint.classList.remove('hidden');
+        } else {
+          navHint.classList.add('hidden');
+        }
+      }
     } else {
       destBtn.textContent = 'Choose Next Destination →';
       destBtn.disabled = !hasClues;
       destBtn.onclick = hasClues ? () => { if (_locCallbacks.onChooseDestination) _locCallbacks.onChooseDestination(); } : null;
+      if (navHint) navHint.classList.add('hidden');
     }
   }
 
@@ -173,6 +183,14 @@ function showLocation(loc, caseData, state, fieldAgent, callbacks) {
   }
 }
 
+function showArrestHint(msg) {
+  const hint = document.getElementById('nav-hint');
+  if (hint) { hint.textContent = msg; hint.classList.remove('hidden'); }
+  // Scroll action panel up to show the dossier + warrant button
+  const dossierSection = document.querySelector('.dossier-section');
+  if (dossierSection) dossierSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 function enableDestinationButton(enabled) {
   const btn = document.getElementById('btn-choose-destination');
   if (!btn) return;
@@ -188,6 +206,8 @@ function showArrestOption(onArrest) {
   btn.textContent = '🚔 Make Arrest';
   btn.disabled = false;
   btn.onclick = () => onArrest();
+  const hint = document.getElementById('nav-hint');
+  if (hint) hint.classList.add('hidden');
 }
 
 // ===== Clue Reveal =====
